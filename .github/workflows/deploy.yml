@@ -14,6 +14,9 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # ── Build + unit tests (all branches) ──────────────────────
   test:
@@ -23,7 +26,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -47,13 +50,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      # Build with base='/' so vite preview responds at http://localhost:4173/
+      - name: Build (e2e base)
         run: npm run build
 
       - name: Install Playwright browsers
@@ -82,14 +86,17 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      # Build with the GitHub Pages sub-path prefix
+      - name: Build (GitHub Pages)
         run: npm run build
+        env:
+          VITE_BASE_URL: /tur-app/
 
       - uses: actions/configure-pages@v5
 

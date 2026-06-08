@@ -1,8 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const port = 4173
-const base = process.env.CI ? `/tur-app` : ''
-const baseURL = `http://localhost:${port}${base}`
+// e2e always runs against a build with base='/' so the URL is simply the root
+const baseURL = 'http://localhost:4173'
 
 export default defineConfig({
   testDir: './e2e',
@@ -22,6 +21,6 @@ export default defineConfig({
     command: 'npm run preview',
     url: baseURL,
     reuseExistingServer: !process.env.CI,
-    timeout: 30_000,
+    timeout: 60_000,
   },
 })
